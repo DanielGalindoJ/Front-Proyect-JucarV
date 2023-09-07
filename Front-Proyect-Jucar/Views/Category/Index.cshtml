@@ -34,6 +34,7 @@
                 <th>Estado</th>
                 <th>Creation del Registro</th>
                 <th>Modificacion del registro</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -46,18 +47,18 @@
                     <td>@categories.State</td>
                     <td>@categories.CreationDate</td>
                     <td>@categories.ModificationDate</td>
+                    
+                        <td>
+                        <a asp-action="Edit" asp-route-id="@categories">Edit</a> |
+                        </td>
+                        <td>
+                        <a asp-action="Delete" asp-route-id="@categories.CategoryID">Delete</a>
+                        </td>
+
+                    
                 </tr>
             }
-            @foreach (var item in Model)
-            {
-                <div>
-                    <a asp-action="Edit" asp-route-id="@item.CategoryID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CategoryID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CategoryID">Delete</a>
-                </div>
-
-
-            }
+            
         </tbody>
        
        
