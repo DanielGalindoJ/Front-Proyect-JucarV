@@ -1,0 +1,42 @@
+﻿
+@using Front_Proyect_Jucar.Models.Products;
+@model IEnumerable<SubcategoryViewModel>
+
+@{
+    ViewBag.Title = "list de Subcategories";
+}
+<h2>Lista de las subcategorias</h2>
+
+@if (Model != null && Model.Any())
+{
+    <div class="input-group"><span class="input-group-text" style="color: var(--bs-emphasis-color);font-family: Acme, sans-serif;font-size: 21px;">Buscar:</span><input class="form-control" type="text" placeholder="ID Producto" style="font-family: Acme, sans-serif;font-size: 22px;" /><button class="btn btn-primary" type="button"><i class="fa fa-arrow-circle-up" style="width: 38.7188px;height: 20px;margin: 4px;padding: 5px;font-size: 24px;"></i></button><button class="btn btn-primary" type="button"><i class="fa fa-arrow-circle-down" style="font-size: 24px;"></i></button><button class="btn btn-primary" type="button"><i class="fa fa-search" style="font-size: 23px;"></i></button></div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>SubcategoryID</th>
+                <th> Name</th>
+                
+                <th>Estado</th>
+                <th>Creation del Registro</th>
+                <th>Modificacion del registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var subcategory in Model)
+            {
+                <tr>
+                    <td>@subcategory.SubcategoryID</td>
+                    <td>@subcategory.Name</td>
+                    
+                    <td>@subcategory.State</td>
+                    <td>@subcategory.CreationDate</td>
+                    <td>@subcategory.ModificationDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No subcategories found.</p>
+}

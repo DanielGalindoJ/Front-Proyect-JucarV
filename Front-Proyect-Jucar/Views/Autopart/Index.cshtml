@@ -1,0 +1,65 @@
+﻿@using Front_Proyect_Jucar.Models.Products;
+@model IEnumerable<AutopartViewModel>
+
+@{
+    ViewBag.Title = "List of Autoparts";
+}
+
+
+<body style="--bs-body-bg: var(--bs-gray-100);--bs-body-color: var(--bs-success);color: var(--bs-red);">
+    <nav class="navbar navbar-light navbar-expand-md py-3" style="margin: 0 px 0 px 0 px;margin-top: 15px;color: var(--bs-secondary);background: var(--bs-danger);height: 150px;padding: 150px 50px;">
+        <div class="container">
+            <img src="zyro-image.jpg" width="218" height="117" /><a class="navbar-brand d-flex align-items-center" href="#"></a><button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div id="navcol-1" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                </ul>
+            </div><a href="index.html"></a><span style="text-align: center;padding-top: 0px;padding-bottom: 5px;margin-top: 2px;font-size: 30px;font-family: Alatsi, sans-serif;color: var(--bs-white);font-weight: bold;padding-left: 0px;padding-right: 55px;margin-left: 18px;margin-right: -24px;">AUTOPARTES JUCAR SAS </span>
+        </div>
+    </nav>
+</body>    
+    <h2>Lista de los Autopartes</h2>
+
+@if (Model != null && Model.Any())
+{
+        <div class="input-group"><span class="input-group-text" style="color: var(--bs-emphasis-color);font-family: Acme, sans-serif;font-size: 21px;">Buscar:</span><input class="form-control" type="text" placeholder="ID Producto" style="font-family: Acme, sans-serif;font-size: 22px;" /><button class="btn btn-primary" type="button"><i class="fa fa-arrow-circle-up" style="width: 38.7188px;height: 20px;margin: 4px;padding: 5px;font-size: 24px;"></i></button><button class="btn btn-primary" type="button"><i class="fa fa-arrow-circle-down" style="font-size: 24px;"></i></button><button class="btn btn-primary" type="button"><i class="fa fa-search" style="font-size: 23px;"></i></button></div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>AutopartID</th>
+                <th> Nombre</th>
+                <th>Descripcion</th>
+                <th>PesoKgs</th>
+                <th>Altura (cm)</th>
+                <th>Longitud (Cm)</th>
+                <th>Zona del Vehiculo</th>
+                <th>Estado</th>
+                <th>Creation del Registro</th>
+                <th>Modificacion del registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var autopart in Model)
+            {
+                <tr>
+                    <td>@autopart.AutopartID</td>
+                    <td>@autopart.Name</td>
+                    <td>@autopart.Description</td>
+                    <td>@autopart.WeightKgs</td>
+                    <td>@autopart.HeightCm</td>
+                    <td>@autopart.LengthCm</td>
+                    <td>@autopart.VehicleZone</td>
+                    <td>@autopart.State</td>
+                    <td>@autopart.CreationDate</td>
+                    <td>@autopart.ModificationDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No companies found.</p>
+}
