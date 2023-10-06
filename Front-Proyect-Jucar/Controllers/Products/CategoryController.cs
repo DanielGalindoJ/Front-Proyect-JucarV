@@ -16,7 +16,7 @@ namespace Front_Proyect_Jucar.Controllers.Products
         public CategoryController()
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:7028/api/categories/"); // Ajusta la ruta base según tu API..
+            _httpClient.BaseAddress = new Uri("https://localhost:7292/api/categories/"); // Ajusta la ruta base según tu API..
         }
 
         // GET: api/categories
