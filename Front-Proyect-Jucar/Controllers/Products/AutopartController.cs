@@ -3,113 +3,166 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace Front_Proyect_Jucar.Controllers.Products
 {
     public class AutopartController : Controller
     {
-        static HttpClient client = new HttpClient();
+        private readonly HttpClient _httpClient;
 
-
-        // GET: CompaniesController
-        public ActionResult Index()
+        // GET: AutopartController
+        public AutopartController()
         {
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri("https://localhost:7028/api/autoparts/"); // Ajusta la ruta base según tu API..
+        }
 
-            IEnumerable<AutopartViewModel> autoparts = null;
-
-            using (var client = new HttpClient())
+        // GET: api/autopart
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var response = await _httpClient.GetAsync("");
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri(" https://localhost:7028/api/autoparts ");
-                //HTTP GET
-                var responseTask = client.GetAsync("autoparts");
-                responseTask.Wait();
+                var json = await response.Content.ReadAsStringAsync();
+                var autoparts = JsonConvert.DeserializeObject<List<AutopartViewModel>>(json);//
+                return View(autoparts);
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+                return View(Enumerable.Empty<CategoryViewModel>());
+            }
+        }
 
-                var result = responseTask.Result;
+        // GET: api/autopart/Details/5
+        [HttpGet("Details/{id}")]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var response = await _httpClient.GetAsync($"Details/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var autoparts = JsonConvert.DeserializeObject<AutopartViewModel>(json);
+                return View(autoparts);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
-                if (result.IsSuccessStatusCode)
+        // GET: api/autopart/Create
+        [HttpGet("Create")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: api/autopart/Create
+        [HttpPost("Create")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(AutopartViewModel autopart)
+        {
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(autopart);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("", content);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var contentTask = result.Content.ReadAsStringAsync();
-                    contentTask.Wait();
-                    var json = contentTask.Result;
-                    autoparts = JsonConvert.DeserializeObject<List<AutopartViewModel>>(json); ;
+                    return RedirectToAction(nameof(Index));
                 }
-                else //web api sent error response 
+                else
                 {
-                    //log response status here..
-
-                    autoparts = Enumerable.Empty<AutopartViewModel>();
-
-                    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+                    ModelState.AddModelError(string.Empty, "Failed to create autopart. Please try again.");
                 }
             }
-            return View(autoparts);
+
+            return View(autopart);
         }
 
-        // GET: AutopartController/Details/5
-        public ActionResult Details(int id)
+
+        // GET: api/autopart/Edit/5
+        [HttpGet("Edit/{Id}")]
+        public async Task<IActionResult> Edit(Guid id)
         {
-            return View();
+            var response = await _httpClient.GetAsync($"Edit/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var autoparts = JsonConvert.DeserializeObject<AutopartViewModel>(json);
+                return View(autoparts);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
-        // GET: AutopartController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AutopartController/Create
-        [HttpPost]
+        // POST: api/autopart/Edit/5
+        [HttpPost("Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Edit(Guid id, AutopartViewModel autopart)
         {
-            try
+            if (id != autopart.AutopartID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(autopart);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync($"Edit/{id}", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Failed to update category. Please try again.");
+                }
+            }
+
+            return View(autopart);
+        }
+
+        // GET: api/autopart/Delete/5
+        [HttpGet("Delete/{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var response = await _httpClient.GetAsync($"Delete/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var autopart = JsonConvert.DeserializeObject<AutopartViewModel>(json);
+                return View(autopart);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        // POST: api/autopart/Delete/5
+        [HttpPost("Delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var response = await _httpClient.DeleteAsync($"Delete/{id}");
+            if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            else
             {
-                return View();
-            }
-        }
-
-        // GET: AutopartController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AutopartController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AutopartController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AutopartController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
+                ModelState.AddModelError(string.Empty, "Failed to delete category. Please try again.");
                 return View();
             }
         }
