@@ -1,4 +1,5 @@
 ﻿using Entities.Models.Products;
+using Front_Proyect_Jucar.Models.Products;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
